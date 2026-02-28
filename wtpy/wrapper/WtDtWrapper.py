@@ -27,6 +27,9 @@ class WtDtWrapper:
         self.api.get_version.restype = c_char_p
         self.ver = bytes.decode(self.api.get_version())
 
+        self.api.initialize.argtypes = [c_char_p, c_char_p, c_bool, c_bool]
+        self.api.initialize.restype = None
+
         self.api.create_ext_parser.restype = c_bool
         self.api.create_ext_parser.argtypes = [c_char_p]
 
