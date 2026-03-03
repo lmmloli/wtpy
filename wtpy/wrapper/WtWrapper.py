@@ -1225,6 +1225,8 @@ class WtWrapper:
         @flag       下单标志, 0-normal, 1-fak, 2-fok
         '''
         ret = self.api.hft_buy(id, bytes(stdCode, encoding = "utf8"), price, qty, bytes(userTag, encoding = "utf8"), flag)
+        if ret is None:
+            return ""
         return bytes.decode(ret)
 
     def hft_sell(self, id:int, stdCode:str, price:float, qty:float, userTag:str, flag:int):
@@ -1237,6 +1239,8 @@ class WtWrapper:
         @flag       下单标志, 0-normal, 1-fak, 2-fok
         '''
         ret = self.api.hft_sell(id, bytes(stdCode, encoding = "utf8"), price, qty, bytes(userTag, encoding = "utf8"), flag)
+        if ret is None:
+            return ""
         return bytes.decode(ret)
 
     ''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
