@@ -90,6 +90,8 @@ class WtWrapper:
         self.api.hft_buy.argtypes = [c_ulong, c_char_p, c_double, c_double, c_char_p, c_int32]
         self.api.hft_sell.restype = c_char_p
         self.api.hft_sell.argtypes = [c_ulong, c_char_p, c_double, c_double, c_char_p, c_int32]
+        self.api.hft_exit_long.restype = c_char_p
+        self.api.hft_exit_long.argtypes = [c_ulong, c_char_p, c_double, c_double, c_char_p, c_bool, c_int32]
         self.api.hft_cancel_all.restype = c_char_p
 
         self.api.create_ext_parser.restype = c_bool
@@ -1239,6 +1241,23 @@ class WtWrapper:
         @flag       下单标志, 0-normal, 1-fak, 2-fok
         '''
         ret = self.api.hft_sell(id, bytes(stdCode, encoding = "utf8"), price, qty, bytes(userTag, encoding = "utf8"), flag)
+        if ret is None:
+            return ""
+        return bytes.decode(ret)
+
+    def hft_exit_long(self, id:int, stdCode:str, price:float, qty:float, userTag:str, isToday:bool, flag:int):
+        '''
+        平多仓专用指令（绕过 actpolicy target 模型，直接发平多报单）
+        @id         策略ID
+        @stdCode    品种代码
+        @price      卖出价格
+        @qty        数量
+        @userTag    用户标签
+        @isToday    False=平昨(WOT_CLOSE), True=平今(WOT_CLOSETODAY)
+        @flag       下单标志, 0-normal, 1-fak, 2-fok
+        账户无对应持仓时 CTP 返回「平昨持仓不足」或「平今持仓不足」
+        '''
+        ret = self.api.hft_exit_long(id, bytes(stdCode, encoding = "utf8"), price, qty, bytes(userTag, encoding = "utf8"), isToday, flag)
         if ret is None:
             return ""
         return bytes.decode(ret)

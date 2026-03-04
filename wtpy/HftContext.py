@@ -394,6 +394,26 @@ class HftContext:
         for localid in ids:
             localids.append(int(localid))
         return localids
+
+    def stra_sell_close(self, stdCode:str, price:float, qty:float, userTag:str = "", isToday:bool = False, flag:int = 0):
+        '''
+        平多仓专用指令（绕过 actpolicy target 模型，直接发平多报单）
+        账户无对应多仓时 CTP 返回「平昨持仓不足」(isToday=False) 或「平今持仓不足」(isToday=True)
+        @stdCode    品种代码
+        @price      卖出价格
+        @qty        数量
+        @userTag    用户标签
+        @isToday    False=平昨(WOT_CLOSE), True=平今(WOT_CLOSETODAY)
+        @flag       下单标志, 0-normal, 1-fak, 2-fok
+        '''
+        idstr = self.__wrapper__.hft_exit_long(self.__id__, stdCode, price, qty, userTag, isToday, flag)
+        if len(idstr) == 0:
+            return list()
+        ids = idstr.split(",")
+        localids = list()
+        for localid in ids:
+            localids.append(int(localid))
+        return localids
     
     def stra_get_all_codes(self) -> list:
         '''
