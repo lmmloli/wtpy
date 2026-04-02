@@ -105,6 +105,23 @@ class WtEngine:
             return None
         return self.__ext_parsers__[id]
 
+    def set_parser_event_callback(self, cb):
+        '''
+        注册内置 Parser（如 ParserCTP）的连接事件回调。
+        @cb  callable(evtId:int, parserId:str)
+             evtId: 1=init 2=connect 3=disconnect 4=release
+        '''
+        self.__parser_event_cb__ = cb
+
+    def on_builtin_parser_event(self, evtId:int, parserId:str):
+        '''由 WtWrapper 在内置 parser 事件时调用（扩展 parser 走原有路径）。'''
+        cb = getattr(self, '__parser_event_cb__', None)
+        if cb is not None:
+            try:
+                cb(evtId, parserId)
+            except Exception:
+                pass
+
     def get_extended_executer(self, id:str)->BaseExtExecuter:
         if id not in self.__ext_executers__:
             return None

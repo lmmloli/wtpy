@@ -304,8 +304,10 @@ class WtWrapper:
         engine = self._engine
         parser = engine.get_extended_parser(id)
         if parser is None:
+            # 内置 parser（如 ParserCTP）——转发给引擎层注册的回调
+            engine.on_builtin_parser_event(evtId, id)
             return
-        
+
         if evtId == EVENT_PARSER_INIT:
             parser.init(engine)
         elif evtId == EVENT_PARSER_CONNECT:
