@@ -126,7 +126,8 @@ setup(
     # },
     install_requires=REQUIRED,
     package_data={"": [
-        "*"
+        "*", "macos/*", "linux/*", "x64/*", "x86/*",
+        "parsers/*", "traders/*", "executer/*",
     ]},
     extras_require=EXTRAS,
     include_package_data=True,
